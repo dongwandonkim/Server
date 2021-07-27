@@ -127,44 +127,43 @@ const getEmployeeSingleLocation = async (req, res) => {
     location.workManuals = location.workManuals.filter((n) => !n.deleted);
 
     // const location = await Location.aggregate([
-    //   {
-    //     $match: {
-    //       _id: mongoose.Types.ObjectId(locationId),
-    //       'employees.employee': req.staff._id,
-    //     },
+    // {
+    //   $match: {
+    //     _id: mongoose.Types.ObjectId(locationId),
+    //     'employees.employee': req.staff._id,
     //   },
-    //   {
-    //     $unwind: {
-    //       path: '$notices',
-    //       preserveNullAndEmptyArrays: true,
-    //     },
+    // },
+    // {
+    //   $unwind: {
+    //     path: '$notices',
+    //     preserveNullAndEmptyArrays: true,
     //   },
-    //   {
-    //     $sort: {
-    //       notices: -1,
-    //     },
+    // },
+    // {
+    //   $sort: {
+    //     notices: -1,
     //   },
-    //   {
-    //     $lookup: {
-    //       from: 'categories',
-    //       localField: 'workManuals.category_id',
-    //       foreignField: '_id',
-    //       as: 'category',
-    //     },
+    // },
+    // {
+    //   $unwind: { path: '$workManuals', preserveNullAndEmptyArrays: true },
+    // },
+    // { $match: { 'workManuals.deleted': { $eq: false } } },
+    // {
+    //   $unwind: { path: '$category', preserveNullAndEmptyArrays: true },
+    // },
+    // {
+    //   $lookup: {
+    //     from: 'categories',
+    //     localField: 'workManuals.category_id',
+    //     foreignField: '_id',
+    //     as: 'category',
     //   },
-    //   {
-    //     $unwind: '$workManuals',
+    // },
+    // {
+    //   $addFields: {
+    //     workManuals: { $mergeObjects: ['$workManuals', '$category'] },
     //   },
-
-    //   {
-    //     $unwind: '$category',
-    //   },
-    //   // { $match: { 'workManuals.deleted': { $eq: false } } },
-    //   {
-    //     $addFields: {
-    //       workManuals: { $mergeObjects: ['$workManuals', '$category'] },
-    //     },
-    //   },
+    // },
     //   {
     //     $group: {
     //       _id: '$_id',
@@ -177,7 +176,7 @@ const getEmployeeSingleLocation = async (req, res) => {
     //       schedule_changes: { $first: '$schedule_changes' },
     //       transitions: { $first: '$transitions' },
     //       workManuals: {
-    //         $addToSet: '$workManuals',
+    //         $first: '$workManuals',
     //       },
     //       notices: { $addToSet: '$notices' },
     //     },

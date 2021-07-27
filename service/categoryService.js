@@ -1,23 +1,15 @@
+const mongoose = require('mongoose');
 const Category = require('../models/location/category');
 const Location = require('../models/location/location');
 
-const findNotDeletedCategory = (locationId, limit, name = '') => {
-  return Category.find({
-    locationId,
+const findNotDeletedCategory = async (locationId, name = '') => {
+  const c = await Category.find({
+    locationId: mongoose.Types.ObjectId(locationId),
     name,
     deleted: false,
-  }).limit(limit);
+  });
+  return c;
 };
-
-// const findNotDeletedCategory = (locationId, limit, name = '') => {
-//   return Category.find({
-//     locationId,
-//     name: {
-//       $regex: `.*${name}.*`,
-//     },
-//     deleted: false,
-//   }).limit(limit);
-// };
 
 const createCategory = async (locationId, name) => {
   const newCategory = new Category({ locationId, name });
