@@ -18,7 +18,7 @@ const check_email = async (req, res) => {
 const createEmployer = async (req, res) => {
   try {
     const newEmployer = await employerService.createEmployer(req.body);
-    res.status(201).send(newEmployer);
+    res.status(201).send({ success: true, newEmployer });
   } catch (error) {
     return res.status(500).send(error.message);
   }
@@ -27,9 +27,9 @@ const createEmployer = async (req, res) => {
 const getEmployerProfile = async (req, res) => {
   try {
     const employer = await employerService.getEmployerProfile(req.owner);
-    res.send(employer);
+    res.send({ success: true, employer });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).send({ success: false, error: error.message });
   }
 };
 
@@ -44,7 +44,7 @@ const updateEmployerProfile = async (req, res) => {
     );
     return res.send({ success: true, employer });
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({ success: false, error: error.message });
   }
 };
 
@@ -75,24 +75,11 @@ const killAllSession = async (req, res) => {
 };
 
 const getAllLocations = async (req, res) => {
-  if (!req.owner) return res.status(400).send('권한이 없습니다');
-  const locIds = req.owner.stores.map((ids) => ids.location); // get all objectIds from user.stores into arrays
-
-  if (locIds.length < 1) {
-    return res.status(400).send({
-      message: '매장이 없습니다.',
-    });
-  }
-
   try {
-    const locations = await Location.find({
-      _id: { $in: locIds },
-    });
-    res.send({ locations });
+    const locations = await employerService.getEmployersAllLocation(req.owner);
+    res.send({ success: true, locations });
   } catch (err) {
-    res.status(500).send({
-      message: err,
-    });
+    return res.status(500).send({ success: false, error: err.message });
   }
 };
 

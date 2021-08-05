@@ -1,8 +1,10 @@
+const Location = require('../models/location/location');
 const Employer = require('../models/user/employer');
 
 class EmployersService {
   constructor() {
     this.Employer = Employer;
+    this.Location = Location;
   }
 
   async createEmployer(body) {
@@ -47,27 +49,21 @@ class EmployersService {
       throw new Error(error.message);
     }
   }
-  // getEmployersAllLocation() {
-  //   if (!req.owner) return res.status(400).send('권한이 없습니다');
-  //   const locIds = req.owner.stores.map((ids) => ids.location); // get all objectIds from user.stores into arrays
+  async getEmployersAllLocation(user) {
+    if (!user) return res.status(400).send('권한이 없습니다');
+    const locIds = user.stores.map((ids) => ids.location); // get all locationIds from user.stores
 
-  //   if (locIds.length < 1) {
-  //     return res.status(400).send({
-  //       message: '매장이 없습니다.',
-  //     });
-  //   }
+    if (locIds.length < 1) throw new Error('매장이 없습니다');
 
-  //   try {
-  //     const locations = await Location.find({
-  //       _id: { $in: locIds },
-  //     });
-  //     res.send({ locations });
-  //   } catch (err) {
-  //     res.status(500).send({
-  //       message: err,
-  //     });
-  //   }
-  // }
+    try {
+      const locations = await this.Location.find({
+        _id: { $in: locIds },
+      });
+      return locations;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
 }
 
 module.exports = EmployersService;
